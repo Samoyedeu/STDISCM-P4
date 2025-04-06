@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8000:80"
+    container_name: frontend
+
+  auth-service:
+    build:
+      context: ./auth-service
+    ports:
+      - "8001:8080"
+    container_name: auth-service
+
+  course-service:
+    build:
+      context: ./course-service
+    ports:
+      - "8002:8080"
+    container_name: course-service
+

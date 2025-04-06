@@ -1,7 +1,7 @@
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\model\Course.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\security\SecurityConfig.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\config\WebConfig.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\CourseServiceApplication.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\security\JwtRequestFilter.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\security\JwtUtil.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\controller\CourseController.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\controller\CourseController.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\security\JwtUtil.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\security\SecurityConfig.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\model\Course.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\config\WebConfig.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\CourseServiceApplication.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\course-service\src\main\java\com\example\course\security\JwtRequestFilter.java

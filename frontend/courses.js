@@ -2,11 +2,12 @@ const token = localStorage.getItem('jwtToken');
 
 if (!token) {
     alert('Not logged in! Redirecting to login.');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 document.getElementById('loadCoursesBtn').addEventListener('click', function () {
-    const token = localStorage.getItem('jwtToken'); // ✅ same key used as in login.js
+    const token = localStorage.getItem('jwtToken'); // ✅ same key
+    // used as in index.js
 
     console.log("TOKEN:", token); // good for debugging
 
@@ -37,5 +38,5 @@ document.getElementById('loadCoursesBtn').addEventListener('click', function () 
 
 document.getElementById('logoutBtn').addEventListener('click', function () {
     localStorage.removeItem('token');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 });

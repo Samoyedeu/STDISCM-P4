@@ -1,7 +1,7 @@
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\security\SecurityConfig.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\security\JwtUtil.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\AuthServiceApplication.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\controller\AuthController.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\model\LoginRequest.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\model\User.java
-C:\Users\jptma\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\repository\UserRepository.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\security\JwtUtil.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\model\LoginRequest.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\AuthServiceApplication.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\model\User.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\repository\UserRepository.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\controller\AuthController.java
+C:\Users\PC\Documents\GitHub\STDISCM-P4\auth-service\src\main\java\com\example\auth\security\SecurityConfig.java
