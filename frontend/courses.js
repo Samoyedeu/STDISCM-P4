@@ -39,3 +39,7 @@ document.getElementById('logoutBtn').addEventListener('click', function () {
     localStorage.removeItem('token');
     window.location.href = 'login.html';
 });
+
+document.getElementById('viewGradesBtn').addEventListener('click', function () {
+    window.location.href = 'grades.html';
+});
