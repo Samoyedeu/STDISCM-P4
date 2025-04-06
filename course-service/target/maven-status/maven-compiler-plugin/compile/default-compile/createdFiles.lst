@@ -4,6 +4,7 @@ com\example\course\config\WebConfig.class
 com\example\course\controller\CourseController.class
 com\example\course\repository\CourseRepository.class
 com\example\course\CourseServiceApplication.class
+com\example\course\service\CourseService.class
 com\example\course\security\SecurityConfig.class
 com\example\course\config\WebConfig$1.class
 com\example\course\security\JwtUtil.class

@@ -36,7 +36,7 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
     }
-    }
+
 
     @GetMapping("/ping")
     public String ping() {

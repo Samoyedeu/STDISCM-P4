@@ -1,23 +1,24 @@
-
 package com.example.course.controller;
 
 import com.example.course.model.Course;
+import com.example.course.repository.CourseRepository;
+import com.example.course.service.CourseService;  // Add the service class import
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.course.repository.CourseRepository;
-
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class CourseController {
 
     private final CourseRepository courseRepository;
+    private final CourseService courseService;  // Declare courseService
 
-    public CourseController(CourseRepository courseRepository) {
+    // Constructor to inject both the repository and service
+    public CourseController(CourseRepository courseRepository, CourseService courseService) {
         this.courseRepository = courseRepository;
+        this.courseService = courseService;
     }
 
     @GetMapping
@@ -34,5 +35,12 @@ public class CourseController {
             return "Sample courses added!";
         }
         return "Courses already exist.";
+    }
+
+    // Get available courses for enrollment as JSON
+    @GetMapping("/enroll")
+    public ResponseEntity<List<Course>> enroll() {
+        List<Course> availableCourses = courseService.getAvailableCourses();
+        return ResponseEntity.ok(availableCourses);
     }
 }
