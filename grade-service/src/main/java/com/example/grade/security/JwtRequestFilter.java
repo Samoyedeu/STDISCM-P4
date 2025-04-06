@@ -2,6 +2,9 @@ package com.example.grade.security;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -10,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -30,10 +34,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
             if (jwtUtil.isTokenValid(token)) {
                 Claims claims = jwtUtil.extractClaims(token);
                 System.out.println("Token valid. Claims: " + claims);
-                // You can set authentication here if needed
+                request.setAttribute("claims", claims); // 🔥 THIS is critical
+                String username = claims.getSubject();
+                String role = claims.get("role", String.class);  // assuming 'role' is part of token
+
+                // ✅ Set authentication with role
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        username,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 System.out.println("Invalid token");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");

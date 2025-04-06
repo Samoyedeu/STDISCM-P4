@@ -1,7 +1,10 @@
 package com.example.auth.controller;
 
 import com.example.auth.model.LoginRequest;
+import com.example.auth.model.User;
+import com.example.auth.repository.UserRepository;
 import com.example.auth.security.JwtUtil;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -23,12 +28,14 @@ public class AuthController {
         System.out.println("Username: " + login.getUsername());
         System.out.println("Password: " + login.getPassword());
 
-        if ("student1".equals(login.getUsername()) && "pass123".equals(login.getPassword())) {
-            String token = jwtUtil.generateToken(login.getUsername(), "student");
+        User user = userRepository.findByUsername(login.getUsername());
+        if (user != null && user.getPassword().equals(login.getPassword())) {
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
             return ResponseEntity.ok(Map.of("token", token));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    }
     }
 
     @GetMapping("/ping")

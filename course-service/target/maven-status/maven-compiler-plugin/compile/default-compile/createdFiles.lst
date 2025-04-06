@@ -2,6 +2,7 @@ com\example\course\security\JwtRequestFilter.class
 com\example\course\model\Course.class
 com\example\course\config\WebConfig.class
 com\example\course\controller\CourseController.class
+com\example\course\repository\CourseRepository.class
 com\example\course\CourseServiceApplication.class
 com\example\course\security\SecurityConfig.class
 com\example\course\config\WebConfig$1.class

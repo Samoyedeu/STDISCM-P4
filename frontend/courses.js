@@ -5,6 +5,24 @@ if (!token) {
     window.location.href = 'login.html';
 }
 
+function parseJwt(token) {
+    try {
+        const base64Payload = token.split('.')[1];
+        const payload = atob(base64Payload);
+        return JSON.parse(payload);
+    } catch (e) {
+        return null;
+    }
+}
+
+
+const decoded = parseJwt(localStorage.getItem('jwtToken'));
+console.log("Decoded:", decoded);
+if (decoded?.role !== 'student') {
+    document.getElementById('viewGradesBtn').style.display = 'none';
+}
+
+
 document.getElementById('loadCoursesBtn').addEventListener('click', function () {
     const token = localStorage.getItem('jwtToken'); // ✅ same key used as in login.js
 
