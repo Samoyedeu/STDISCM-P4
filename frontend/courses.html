@@ -6,7 +6,6 @@
 </head>
 <body>
 <h1>Course Viewer</h1>
-<button id="loadCoursesBtn">Load Courses</button>
 <div id="gradeBtnWrapper">
     <button id="viewGradesBtn">View Grades</button>
 </div>
@@ -18,29 +17,5 @@
 <ul id="courseList"></ul>
 
 <script src="courses.js"></script>
-<script>
-//     // Enroll button functionality
-//     document.getElementById('enrollBtn').addEventListener('click', function() {
-//     const token = localStorage.getItem('jwtToken');
-//     fetch('http://localhost:8082/courses/enroll', {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': 'Bearer ' + token  // Pass the JWT token here
-//         }
-//     })
-//     .then(res => res.json())
-//     .then(courses => {
-//         console.log("Courses: " + courses);
-//         alert('Courses loaded for enrollment!');
-//         // Redirect to the enrollment page after successful data fetch
-//         window.location.href = 'http://localhost:8084/enrollments/enroll';
-//     })
-//     .catch(err => {
-//         console.error('Error loading courses:', err);
-//         alert('Failed to load courses');
-//     });
-// });
-
-</script>
 </body>
 </html>

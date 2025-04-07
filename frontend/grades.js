@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     if (!token) {
         alert('Not logged in! Redirecting to login.');
         window.location.href = 'login.html';
@@ -19,39 +18,99 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const decoded = parseJwt(token);
-    if (!decoded || decoded.role !== 'student') {
-        alert('Access denied: Only students can view grades.');
-        window.location.href = 'courses.html'; // or a safe page
+    const role = decoded?.role;
+
+    const gradeList = document.getElementById('gradeList');
+    const facultyFormContainer = document.getElementById('facultyFormContainer');
+    const uploadForm = document.getElementById('uploadGradeForm');
+
+    function renderGrades(grades, isFaculty) {
+        gradeList.innerHTML = '';
+        if (isFaculty) {
+            const heading = document.createElement('h3');
+            heading.textContent = "All Student Grades";
+            gradeList.appendChild(heading);
+        }
+        grades.forEach(grade => {
+            const li = document.createElement('li');
+            li.textContent = isFaculty
+                ? `${grade.studentId} - ${grade.courseId}: ${grade.grade}`
+                : `${grade.courseId}: ${grade.grade}`;
+            gradeList.appendChild(li);
+        });
     }
 
-    document.getElementById('loadGradesBtn').addEventListener('click', function () {
+    if (role === 'student') {
         fetch('http://localhost:8083/grades', {
-            method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token
             }
         })
-            .then(res => {
-                console.log("Response status:", res.status); // 👈 Add this
-                if (!res.ok) throw new Error('Unauthorized');
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
-                console.log("Grades:", data); // 👈 Add this
-                const list = document.getElementById('gradeList');
-                list.innerHTML = '';
-                data.forEach(grade => {
-                    const li = document.createElement('li');
-                    li.textContent = `${grade.courseId}: ${grade.grade}`;
-                    list.appendChild(li);
-                });
+                renderGrades(data, false);
             })
             .catch(err => {
-                console.error('Failed to load grades:', err); // 👈 Already exists
+                console.error('Failed to load student grades:', err);
                 alert('Error loading grades.');
             });
 
-    });
+    } else if (role === 'faculty') {
+        // Show the form
+        facultyFormContainer.style.display = 'block';
+
+        fetch('http://localhost:8083/grades/all', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                renderGrades(data, true);
+            })
+            .catch(err => {
+                console.error('Failed to load all grades:', err);
+                alert('Error loading all student grades.');
+            });
+
+        // Handle form submission
+        uploadForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const studentId = document.getElementById('studentId').value;
+            const courseId = document.getElementById('courseId').value;
+            const grade = document.getElementById('grade').value;
+
+            fetch('http://localhost:8083/grades', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ studentId, courseId, grade })
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to submit grade');
+                    return res.text();
+                })
+                .then(msg => {
+                    alert("Grade submitted successfully!");
+                    // Optionally refresh the list
+                    return fetch('http://localhost:8083/grades/all', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                })
+                .then(res => res.json())
+                .then(updatedGrades => {
+                    renderGrades(updatedGrades, true);
+                    uploadForm.reset(); // Clear the form
+                })
+                .catch(err => {
+                    console.error("Error submitting grade:", err);
+                    alert("Failed to submit grade.");
+                });
+        });
+    }
 
     document.getElementById('logoutBtn').addEventListener('click', function () {
         localStorage.removeItem('jwtToken');
@@ -60,6 +119,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('viewCoursesBtn').addEventListener('click', function () {
         window.location.href = 'courses.html';
-    })
+    });
 });
-

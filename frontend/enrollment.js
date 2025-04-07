@@ -72,3 +72,7 @@ let token = localStorage.getItem('jwtToken');
         alert("Error enrolling in course");
       });
     }
+
+    document.getElementById('viewCoursesBtn').addEventListener('click', function () {
+        window.location.href = 'courses.html';
+    })
