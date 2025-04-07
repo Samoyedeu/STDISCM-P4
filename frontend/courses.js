@@ -63,6 +63,5 @@ document.getElementById('viewGradesBtn').addEventListener('click', function () {
 });
 
 document.getElementById('enrollBtn').addEventListener('click', function() {
-    window.location.href = 'enrollment.html';  // LiveServer URL
-       
+    window.location.href = 'enrollment.html';  // LiveServer URL  // LiveServer URL
 });

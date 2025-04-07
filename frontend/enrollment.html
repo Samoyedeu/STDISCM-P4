@@ -7,59 +7,9 @@
 </head>
 <body>
     <h1>Course Enrollment</h1>
-    <button id="loadCoursesBtn">Load Courses</button>
     <ul id="courseList"></ul>
-
-    <script>
-        // Fetch courses from enrollment service (which fetches from course service)
-        document.getElementById('loadCoursesBtn').addEventListener('click', function () {
-            fetch('http://localhost:8084/enrollments/courses')  // Assuming enrollment service is on port 8084
-                .then(res => res.json())
-                .then(courses => {
-                    const list = document.getElementById('courseList');
-                    list.innerHTML = '';  // Clear existing list
-                    courses.forEach(course => {
-                        const li = document.createElement('li');
-                        li.textContent = `${course.name} - ${course.instructor}`;
-                        
-                        // Add "Enroll" button for each course
-                        const enrollButton = document.createElement('button');
-                        enrollButton.textContent = 'Enroll';
-                        enrollButton.onclick = () => enrollInCourse(course.id);
-                        li.appendChild(enrollButton);
-                        list.appendChild(li);
-                    });
-                })
-                .catch(err => {
-                    console.error('Error fetching courses:', err);
-                    alert('Error loading courses');
-                });
-        });
-
-        // Function to handle course enrollment
-        function enrollInCourse(courseId) {
-            const studentId = 'student1';  // Get student ID from session or JWT token
-
-            fetch('http://localhost:8084/enrollments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    studentId: studentId,
-                    courseId: courseId
-                })
-            })
-            .then(res => res.text())
-            .then(response => {
-                alert('Enrolled successfully in course!');
-                console.log(response);
-            })
-            .catch(err => {
-                console.error('Error enrolling in course:', err);
-                alert('Error enrolling in course');
-            });
-        }
-    </script>
+    <h2>Enrolled Courses</h2>
+    <ul id="enrolledCoursesList"></ul>
+<script src="enrollment.js"></script>   
 </body>
 </html>

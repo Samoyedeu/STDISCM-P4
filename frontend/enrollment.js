@@ -1,88 +1,74 @@
 let token = localStorage.getItem('jwtToken');
-const studentId = 'student1';  // This would normally be retrieved from the logged-in user's token
 
-if (!token) {
-    alert('Not logged in! Redirecting to login.');
-    window.location.href = 'login.html';
-}
-
-document.getElementById('loadEnrollmentsBtn').addEventListener('click', function () {
-    fetch(`http://localhost:8083/enrollments?studentId=${studentId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-    })
-        .then(res => res.json())
-        .then(data => {
-            const list = document.getElementById('enrollmentList');
-            list.innerHTML = '';
-            data.forEach(enrollment => {
-                const li = document.createElement('li');
-                li.textContent = `Course: ${enrollment.courseId}`;
-                list.appendChild(li);
-            });
-        })
-        .catch(err => {
-            console.error('Failed to load enrollments:', err);
-            alert('Unauthorized or error loading enrollments.');
-        });
-});
-
-document.getElementById('enrollBtn').addEventListener('click', function () {
-    const courseId = document.getElementById('courseId').value;
-    
-    if (!courseId) {
-        alert('Please select a course.');
-        return;
+    if (!token) {
+      alert('Not logged in! Redirecting to login.');
+      window.location.href = 'login.html';
     }
 
-    const enrollmentData = {
-        studentId: studentId,
-        courseId: courseId
-    };
+    const studentId = JSON.parse(atob(token.split('.')[1])).sub; // Extract student ID from JWT
 
-    fetch('http://localhost:8083/enrollments', {
-        method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(enrollmentData)
+    // Load all courses and show available ones only
+    fetch("http://localhost:8084/enrollments/courses", {
+    headers: { "Authorization": `Bearer ${token}` }
     })
-        .then(res => res.json())
-        .then(data => {
-            alert('Enrollment successful!');
-            loadEnrollments();  // Refresh the list
-        })
-        .catch(err => {
-            console.error('Error enrolling:', err);
-            alert('Failed to enroll.');
-        });
-});
+    .then(res => res.json())
+    .then(courses => {
+    if (!Array.isArray(courses)) throw new Error("Courses response is not a list");
 
-// Load the current enrollments on page load
-function loadEnrollments() {
-    fetch(`http://localhost:8083/enrollments?studentId=${studentId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
+    fetch(`http://localhost:8084/enrollments?studentId=${studentId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(enrollments => {
+        const enrolledCourseIds = new Set(enrollments.map(e => e.courseId));
+        const courseList = document.getElementById("courseList");
+        const enrolledList = document.getElementById("enrolledCoursesList");
+
+        courseList.innerHTML = "";
+        enrolledList.innerHTML = "";
+
+        courses.forEach(course => {
+        const li = document.createElement("li");
+        li.textContent = `${course.name} - ${course.instructor}`;
+
+        if (enrolledCourseIds.has(course.id)) {
+            enrolledList.appendChild(li); // Display in enrolled section
+        } else {
+            const enrollButton = document.createElement("button");
+            enrollButton.textContent = "Enroll Now";
+            enrollButton.onclick = () => enrollInCourse(course.id);
+            li.appendChild(enrollButton);
+            courseList.appendChild(li); // Display in available section
         }
-    })
-        .then(res => res.json())
-        .then(data => {
-            const list = document.getElementById('enrollmentList');
-            list.innerHTML = '';
-            data.forEach(enrollment => {
-                const li = document.createElement('li');
-                li.textContent = `Course: ${enrollment.courseId}`;
-                list.appendChild(li);
-            });
-        })
-        .catch(err => {
-            console.error('Failed to load enrollments:', err);
-            alert('Unauthorized or error loading enrollments.');
         });
-}
+    });
+    })
+    .catch(err => {
+    console.error("Error fetching courses:", err);
+    alert("Failed to load courses");
+    });
+    
 
-loadEnrollments();  // Call to load the current enrollments immediately after page load
+    // Enroll function
+    function enrollInCourse(courseId) {
+      fetch("http://localhost:8084/enrollments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          studentId: studentId,
+          courseId: courseId
+        })
+      })
+      .then(res => res.text())
+      .then(response => {
+        alert("Enrolled successfully!");
+        console.log(response);
+        loadCourses(); // Refresh both lists
+      })
+      .catch(err => {
+        console.error("Enrollment failed:", err);
+        alert("Error enrolling in course");
+      });
+    }

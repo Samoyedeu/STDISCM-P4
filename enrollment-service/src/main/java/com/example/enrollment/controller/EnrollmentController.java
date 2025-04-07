@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;  // For @RequestBody
 import org.springframework.web.bind.annotation.PostMapping;  // For @PostMapping
 import org.springframework.web.bind.annotation.GetMapping;  // For @GetMapping
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.client.HttpClientErrorException;
+
+
 import java.util.List;
 
 @RestController
@@ -50,23 +56,44 @@ public class EnrollmentController {
         return enrollmentRepository.findByStudentId(studentId);
     }
 
-    // Fetch courses for enrollment
     @GetMapping("/courses")
-    public List<Map<String, Object>> getCourses() {
+    public ResponseEntity<?> getCourses(@RequestHeader("Authorization") String authHeader) {
         String url = courseServiceUrl + "/courses";
-        List<Map<String, Object>> courses = restTemplate.getForObject(url, List.class);
-        return courses;
+        System.out.println("Fetching courses from: " + url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authHeader);  // Pass the JWT token
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<List> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                requestEntity,
+                List.class
+            );
+
+            List<Map<String, Object>> courses = response.getBody();
+            System.out.println("Courses fetched: " + courses);
+            return ResponseEntity.ok(courses);
+
+        } catch (HttpClientErrorException e) {
+            System.err.println("Error fetching courses: " + e.getMessage());
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
+        }
     }
 
-    // Enrollment process (add new enrollment)
+
+
+
     @PostMapping
     public String addEnrollment(@RequestBody Enrollment enrollment) {
-        String studentId = enrollment.getStudentId();
-        String courseId = enrollment.getCourseId();
+        System.out.println("Received enrollment request: studentId = " + enrollment.getStudentId() + ", courseId = " + enrollment.getCourseId());
         
-        Enrollment newEnrollment = new Enrollment(studentId, courseId);
+        Enrollment newEnrollment = new Enrollment(enrollment.getStudentId(), enrollment.getCourseId());
         enrollmentRepository.save(newEnrollment);
-        return "Enrollment added successfully for " + studentId + " in course " + courseId;
+        return "Enrollment added successfully";
     }
+
 
 }
