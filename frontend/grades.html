@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grade Viewer</title>
+</head>
+<body>
+<h1>Student Grades</h1>
+<button id="viewCoursesBtn">View Courses</button>
+<button id="logoutBtn">Logout</button>
+<ul id="gradeList"></ul>
+
+<!-- Faculty form -->
+<div id="facultyFormContainer" style="display:none;">
+    <h2>Upload Grade (Faculty Only)</h2>
+    <form id="uploadGradeForm">
+        <input type="text" id="studentId" placeholder="Student ID" required>
+        <input type="text" id="courseId" placeholder="Course ID" required>
+        <input type="number" id="grade" placeholder="Grade" step="0.1" required>
+        <button type="submit">Submit Grade</button>
+    </form>
+</div>
+
+<script src="grades.js"></script>
+</body>
+</html>
