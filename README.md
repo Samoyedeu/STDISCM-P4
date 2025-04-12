@@ -73,6 +73,6 @@ mvn spring-boot:run
 
 ### Accessing the Application
 
-- The frontend will be available at http://localhost:8000.
+- Use VS Code Live Server to access the frontend.
 
 - You can access the services through their respective APIs, with each service running on its own port.
