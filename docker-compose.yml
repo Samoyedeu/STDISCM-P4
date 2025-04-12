@@ -5,31 +5,132 @@ services:
     ports:
       - "8000:80"
     container_name: frontend
+    depends_on:
+      - auth-service
+      - course-service
+      - grade-service
+      - enrollment-service
 
   auth-service:
     build:
       context: ./auth-service
     ports:
-      - "8001:8080"
+      - "8081:8080"
     container_name: auth-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-auth:3306/auth_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - mysql-auth
+    command: ["sh", "-c", "wait-for-it mysql-auth:3306 -- java -jar app.jar"]
 
   course-service:
     build:
       context: ./course-service
     ports:
-      - "8002:8080"
+      - "8082:8080"
     container_name: course-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-course:3306/course_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - mysql-course
+    command: ["sh", "-c", "wait-for-it mysql-course:3306 -- java -jar app.jar"]
 
   enrollment-service:
     build:
       context: ./enrollment-service
     ports:
-      - "8003:8080"
+      - "8084:8080"
     container_name: enrollment-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-enrollment:3306/enrollment_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - mysql-enrollment
+    command: ["sh", "-c", "wait-for-it mysql-enrollment:3306 -- java -jar app.jar"]
 
   grade-service:
     build:
       context: ./grade-service
     ports:
-      - "8004:8080"
+      - "8083:8080"
     container_name: grade-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-grade:3306/grade_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - mysql-grade
+    command: ["sh", "-c", "wait-for-it mysql-grade:3306 -- java -jar app.jar"]
+
+  mysql-auth:
+    image: mysql:8
+    container_name: mysql-auth
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: auth_db
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mysql-course:
+    image: mysql:8
+    container_name: mysql-course
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: course_db
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mysql-enrollment:
+    image: mysql:8
+    container_name: mysql-enrollment
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: enrollment_db
+    ports:
+      - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mysql-grade:
+    image: mysql:8
+    container_name: mysql-grade
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: grade_db
+    ports:
+      - "3309:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
