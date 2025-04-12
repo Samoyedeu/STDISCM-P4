@@ -15,6 +15,7 @@ This project is a distributed online enrollment system designed to manage studen
 The application follows the **Model-View-Controller (MVC)** architecture. The **view** layer (frontend) is hosted on its own node, while the **controller** and **API** layers (auth-service, course-service, grade-service, enrollment-service) run on separate nodes.
 
 ### Fault Tolerance:
+
 When a node goes down, the features provided by that node will stop working. However, the rest of the application will remain functional.
 
 ## Prerequisites
@@ -23,8 +24,6 @@ Before running this project, make sure you have the following installed:
 
 - Java 11 or higher
 - Maven
-- Docker (for frontend containerization)
-- Docker Compose (for managing multi-container applications)
 
 ## Setting Up and Running the Project
 
@@ -35,44 +34,45 @@ git clone
 
 cd STDISCM-P4
 ```
+
 ### 2. Build and Run the Services
+
 Each service (auth-service, course-service, grade-service, enrollment-service) can be run independently.
+
 1. Run the **auth-service**
+
 ```bash
 cd auth-service
 mvn clean install
 mvn spring-boot:run
 ```
+
 2. Run the **course-service**
+
 ```bash
 cd course-service
 mvn clean install
 mvn spring-boot:run
 ```
+
 3.  Run the **grade-service**
+
 ```bash
 cd grade-service
 mvn clean install
 mvn spring-boot:run
 ```
+
 4. Run the **enrollment-service**
+
 ```bash
 cd enrollment-service
 mvn clean install
 mvn spring-boot:run
 ```
-5. Run the **Frontend**
-```bash
-cd frontend
-docker build --no-cache -t frontend-image .
-docker run -d -p 8000:80 frontend-image
-```
-6. Build and Run the Entire System Using Docker Compose
-```bash
-docker-compose build --no-cache
-docker-compose up
-```
+
 ### Accessing the Application
+
 - The frontend will be available at http://localhost:8000.
 
 - You can access the services through their respective APIs, with each service running on its own port.
