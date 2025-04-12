@@ -1,5 +1,7 @@
+com\example\auth\config\WebConfig.class
 com\example\auth\model\LoginRequest.class
 com\example\auth\security\SecurityConfig.class
+com\example\auth\config\WebConfig$1.class
 com\example\auth\controller\AuthController.class
 com\example\auth\model\User.class
 com\example\auth\repository\UserRepository.class
